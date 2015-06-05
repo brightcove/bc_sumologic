@@ -1,6 +1,22 @@
+# bundler
+.bundle
+Gemfile*.lock
+
+# For MacOS:
+.DS_Store
+
+# vim
 .*.sw?
 .sw?
+
+# Vagrant
+# .vagrant
+
 *.un~
-*.json
 vendor
 *.lock
+
+# Test kitchen
+.kitchen/
+.kitchen.local.yml
+cookbooks/
