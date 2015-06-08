@@ -20,7 +20,7 @@ class Chef
         @@collector ||= Sumologic::Collector.new(
           name: node.name,
           api_username: databag_creds['userID'] || node[:sumologic][:userID],
-          api_password: databag_creds['password'] || node[:sumologic][:password]
+          api_password: databag_creds['password'] || node[:sumologic][:password],
           api_timeout: node['sumologic']['api_timeout']
         )
 
