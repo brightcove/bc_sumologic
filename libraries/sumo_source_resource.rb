@@ -5,7 +5,7 @@ class Chef
       state_attrs :category, :default_timezone, :force_timezone
       provider_base Chef::Provider::SumoSource
 
-      def initialize(name, run_context=nil)
+      def initialize(name, run_context = nil)
         super
         if name !~ /^[a-z][A-Za-z0-9_-]*$/
           raise Chef::Exceptions::ValidationFailed, "Sumo source #{name} doesn't match ^[a-z][A-Za-z0-9_-]*$!"
@@ -33,57 +33,64 @@ class Chef
         set_or_return(:api_password, arg, :kind_of => String)
       end
 
-      def path(arg=nil)
-        set_or_return(:path, arg, :kind_of => String)
+      def path(arg = nil)
+        set_or_return(:path, arg, kind_of: String)
       end
 
-      def category(arg=nil)
-        set_or_return(:category, arg, :kind_of => String)
+      def category(arg = nil)
+        set_or_return(:category, arg, kind_of: String)
       end
 
-      def default_timezone(arg=nil)
-        set_or_return(:default_timezone, arg, :kind_of => String)
+      def default_timezone(arg = nil)
+        set_or_return(:default_timezone, arg, kind_of: String)
       end
 
-      def force_timezone(arg=nil)
-        set_or_return(:force_timezone, arg, :kind_of => [TrueClass, FalseClass])
+      def force_timezone(arg = nil)
+        set_or_return(:force_timezone, arg, kind_of: [TrueClass, FalseClass])
       end
 
-      def automatic_date_parsing(arg=nil)
-        set_or_return(:automatic_date_parsing, arg, :kind_of => [TrueClass, FalseClass])
+      def automatic_date_parsing(arg = nil)
+        set_or_return(:automatic_date_parsing, arg, kind_of: [TrueClass, FalseClass])
       end
 
-      def multiline_processing_enabled(arg=nil)
-        set_or_return(:multiline_processing_enabled, arg, :kind_of => [TrueClass, FalseClass])
+      def multiline_processing_enabled(arg = nil)
+        set_or_return(:multiline_processing_enabled, arg, kind_of: [TrueClass, FalseClass])
       end
 
-      def use_autoline_matching(arg=nil)
-        set_or_return(:use_autoline_matching, arg, :kind_of => [TrueClass, FalseClass])
+      def use_autoline_matching(arg = nil)
+        set_or_return(:use_autoline_matching, arg, kind_of: [TrueClass, FalseClass])
       end
 
-      def manual_prefix_regexp(arg=nil)
-        set_or_return(:manual_prefix_regexp, arg, :kind_of => String)
+      def manual_prefix_regexp(arg = nil)
+        set_or_return(:manual_prefix_regexp, arg, kind_of: String)
       end
 
-      def default_date_format(arg=nil)
-        set_or_return(:default_date_format, arg, :kind_of => String)
+      def default_date_format(arg = nil)
+        set_or_return(:default_date_format, arg, kind_of: String)
       end
 
       def to_sumo_hash
-        { type: 'localWildCard', name: name, timeZone: default_timezone,
-        forceTimeZone: force_timezone, pathExpression: path, category: category,
-        sourceType: 'LocalFile', automaticDateParsing: automatic_date_parsing,
-        multilineProcessingEnabled: multiline_processing_enabled,
-        useAutolineMatching: use_autoline_matching, manualPrefixRegexp: manual_prefix_regexp,
-        defaultDateFormat: default_date_format 
+        {
+          type: 'localWildCard',
+          name: name,
+          timeZone: default_timezone,
+          forceTimeZone: force_timezone,
+          pathExpression: path,
+          category: category,
+          sourceType: 'LocalFile',
+          automaticDateParsing: automatic_date_parsing,
+          multilineProcessingEnabled: multiline_processing_enabled,
+          useAutolineMatching: use_autoline_matching,
+          manualPrefixRegexp: manual_prefix_regexp,
+          defaultDateFormat: default_date_format
         }
       end
 
       def node_source_attributes(run_context)
         if run_context && run_context.node
-          sumo_node_attrs = run_context.node[:sumologic][:sources]
+          run_context.node[:sumologic][:log_sources]
         else
-          sumo_node_attrs = {}
+          {}
         end
       end
     end

@@ -6,6 +6,8 @@ configure the sources to send up; works on Linux x86 and x86-64.  Sets up a
 fully unattended installation and gets all your sources pushed up without you
 manually activating or pushing any buttons.
 
+[![Build Status](https://travis-ci.org/PagerDuty/chef-sumologic.svg)](https://travis-ci.org/PagerDuty/chef-sumologic)
+
 Requirements
 ============
 
@@ -20,9 +22,10 @@ I suggest hosting it on a local asset server.
 Platform
 --------
 
-* Tested on Ubuntu 10.04, both x86 and x86-64.
+* Tested on Ubuntu 10.04, 12.04, 14.04
+* Tested on CentOS 5.11, 6.6, 7.0
 * Will need extra work to run in Windows, Solaris.
-* Tested under Chef 0.10.8, Chef 10.12.0, and Chef 10.14.\*, in Ruby 1.8 & 1.9.
+* Tested under Chef 11.0.0, 11.16.4, and 12.1 under Ruby 2.1.5 and 2.2.0.
 
 Attributes
 ==========
@@ -34,6 +37,11 @@ See `attributes/default.rb` for default values.
   'sumocollector'.
 * `node[:sumologic][:disabled]` - Set this if you need to disable the collector
   on this node for some reason.
+* `node[:sumologic][:custom_install]` - Set this if you want to disable the default
+  collector install on this node for some reason.  This can be used if you need to
+  install the collector in a custom manner.  Default is false.
+* `node['sumologic']['api_timeout']` - Set a timeout for calls to the Sumologic API.
+  Default is 60 seconds
 * `node[:sumologic][:collector][:version]` - The version of the collector you
   want to install.
 * `node[:sumologic][:collector][:tarball]` - The name of the tarball you're
@@ -46,14 +54,14 @@ See `attributes/default.rb` for default values.
   for more info:
     https://service.sumologic.com/ui/help/Unattended_Installation.htm
 * `node[:sumologic][:admin][:pass]` - The password for the admin's email above.
-* `node[:sumologic][:sources][:default_category]` - You can specify a category
+* `node[:sumologic][:log_sources][:default_category]` - You can specify a category
   for any of your resources through the sumo\_source definition (see below), but
   this allows you to provide a catch-all that's more descriptive than 'log'.
-* `node[:sumologic][:sources][:default_timezone]` - If you have timezone parsing
+* `node[:sumologic][:log_sources][:default_timezone]` - If you have timezone parsing
   disabled or if there are no timezones in your log timestamps, input the
   timezone you want to default to (must match Sumo's dropdown list *exactly*).
   Otherwise will default to UTC.
-* `node[:sumologic][:sources][:force_timezone]` - Set to *true* to force any
+* `node[:sumologic][:log_sources][:force_timezone]` - Set to *true* to force any
   timestamps parsed out of log files to this timezone, regardless of any
   timezone information they may carry.
 * `node[:sumologic][:credentials][:bag_name]` - Set if you want to pull username
@@ -81,9 +89,20 @@ configure all of your sources before restarting sumologic.  It will also
 correctly set the '-o' sumocollector parameter for a sumo restart to force the
 web interface to accept changes to your sources.
 
-
 In order to store your credentials in an encrypted data bag, make sure you add
 the 'userID' and the 'password' objects to the data bag.
+=======
+Helper Functions
+==============
+
+Sumologic.collector_exists?(node_name, email, pass)
+---------------------------------------------------
+
+This checks whether or not a collector with the given name exists.
+
+* `node_name` - name of the collector to be checked
+* `email` - email to use againt the API
+* `pass` - password for the email above
 
 Changes
 =======
@@ -120,9 +139,11 @@ Changes
 License and Author
 ==================
 
-Author:: Luke Kosewski (<luke@pagerduty.com>)
+* Author:: Grant Ridder (<grant@pagerduty.com>)
+* Author:: Ranjib Dey (<ranjib@pagerduty.com>)
+* Author:: Luke Kosewski (<luke@pagerduty.com>)
 
-Copyright:  2012, PagerDuty, Inc.
+Copyright:  2015, PagerDuty, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
