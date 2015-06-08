@@ -114,7 +114,7 @@ class Sumologic
       response
     end
 
-    def update_source!(source_id, source_data)
+    def update_source!(source_id, source_data, api_timeout = nil)
       u = URI.parse("https://api.sumologic.com/api/v1/collectors/#{id}/sources/#{source_id}")
       request = Net::HTTP::Put.new(u.request_uri)
       request.body = JSON.dump({ source: source_data.merge(id: source_id) })
