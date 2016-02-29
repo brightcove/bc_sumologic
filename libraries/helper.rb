@@ -98,7 +98,7 @@ class Sumologic
       sources.find { |c| c['name'] == source_name }
     end
 
-    def add_source!(source_data)
+    def add_source!(source_data, api_timeout = nil)
       u = URI.parse(api_endpoint + "/collectors/#{id}/sources")
       request = Net::HTTP::Post.new(u.request_uri)
       request.body = JSON.dump({ source: source_data })
