@@ -54,20 +54,20 @@ See `attributes/default.rb` for default values.
   for more info:
     https://service.sumologic.com/ui/help/Unattended_Installation.htm
 * `node[:sumologic][:admin][:pass]` - The password for the admin's email above.
-* `node[:sumologic][:log_sources][:default_category]` - You can specify a category
+* `node[:sumologic][:sources][:default_category]` - You can specify a category
   for any of your resources through the sumo\_source definition (see below), but
   this allows you to provide a catch-all that's more descriptive than 'log'.
-* `node[:sumologic][:log_sources][:default_timezone]` - If you have timezone parsing
+* `node[:sumologic][:sources][:default_timezone]` - If you have timezone parsing
   disabled or if there are no timezones in your log timestamps, input the
   timezone you want to default to (must match Sumo's dropdown list *exactly*).
   Otherwise will default to UTC.
-* `node[:sumologic][:log_sources][:force_timezone]` - Set to *true* to force any
+* `node[:sumologic][:sources][:force_timezone]` - Set to *true* to force any
   timestamps parsed out of log files to this timezone, regardless of any
   timezone information they may carry.
 * `node[:sumologic][:credentials][:bag_name]` - Set if you want to pull username
   and password from a databag
 * `node[:sumologic][:credentials][:item_name]` - See bag_name above
-* `node[:sumologic][:credentials][:secret_file]` - encrypted data bag secret file 
+* `node[:sumologic][:credentials][:secret_file]` - encrypted data bag secret file
 
 
 Usage
