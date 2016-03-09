@@ -24,6 +24,19 @@ class Chef
           api_timeout: node['sumologic']['api_timeout']
         )
 
+        # Does out collector exist?
+        if not @@collector.exist?
+          # No, bug out.
+          raise Chef::Exceptions::ValidationFailed,"A SumoLogic Collector named: `#{node.name}` does not exist.\n\nTo resolve this isssue:\n\n\t1. Stop the SumoCollector process:\n\t\t`sudo /opt/SumoCollector/collector stop`\n\n\t2. Remove the SumoCollector directory.\n\t\t`sudo rm -r /opt/SumoCollector`\n\n\t3. Rerun chef-client.\n\t\t`sudo chef-client`"
+        end
+
+        # Is our collector in Json/Local Config mode?
+        if @@collector.metadata["sourceSyncMode"] == "Json"
+          # No good. We need it in UI/Cloud mode.
+          Chef::Log.warn("Setting sumo collector sourceSyncMode to UI.")
+          @@collector.set_ui_sync_mode
+        end
+
         @current_resource = Chef::Resource::SumoSource.new(@new_resource.name)
         @current_resource.path(@new_resource.path)
         @current_resource.category(@new_resource.category)

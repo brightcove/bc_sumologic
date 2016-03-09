@@ -131,6 +131,30 @@ class Sumologic
       response['etag']
     end
 
+    def get_collector_etag
+      u = URI.parse("https://api.sumologic.com/api/v1/collectors/#{id}")
+      request = Net::HTTP::Get.new(u.request_uri)
+      response = api_request(uri: u, request: request, parse_json: false)
+      response['etag']
+    end
+
+    def set_ui_sync_mode()
+      md = metadata
+      md["sourceSyncMode"] = "UI"
+      update_collector(md)
+      refresh!
+    end
+
+    def update_collector(collector_data, api_timeout = nil)
+      u = URI.parse("https://api.sumologic.com/api/v1/collectors/#{id}")
+      request = Net::HTTP::Put.new(u.request_uri)
+      request.body = JSON.dump({ collector: collector_data })
+      request.content_type = 'application/json'
+      request['If-Match'] = get_collector_etag
+      response = api_request(uri: u, request: request, parse_json: false)
+      response
+    end
+
     private
 
     def api_request_http_call(options = {})
