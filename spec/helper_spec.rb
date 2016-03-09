@@ -82,4 +82,16 @@ describe Sumologic::Collector do
 
     collector.update_source!(2, { foo: :bar })
   end
+
+  it '#update_source! w/timeout' do
+    stub_request(:get, auth_url + '/collectors').to_return(body: JSON.dump(collector_data))
+    stub_request(:get, auth_url + '/collectors/1/sources').to_return(body: JSON.dump(source_data))
+    stub_request(:put, auth_url + '/collectors/1/sources/2')
+      .with(body: "{\"source\":{\"foo\":\"bar\",\"id\":2}}")
+      .to_return(status: 200, body: '{}', headers: {})
+    stub_request(:get, auth_url + '/collectors/1/sources/2')
+      .to_return(status: 200, body: '{}', headers: {})
+
+    collector.update_source!(2, { foo: :bar }, 60)
+  end
 end

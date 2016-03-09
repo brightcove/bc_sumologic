@@ -25,6 +25,14 @@ class Chef
         @default_date_format = nil
       end
 
+      def api_username(arg=nil)
+        set_or_return(:api_username, arg, :kind_of => String)
+      end
+
+      def api_password(arg=nil)
+        set_or_return(:api_password, arg, :kind_of => String)
+      end
+
       def path(arg = nil)
         set_or_return(:path, arg, kind_of: String)
       end

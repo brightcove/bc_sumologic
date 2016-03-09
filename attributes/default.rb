@@ -25,3 +25,8 @@ default['sumologic']['disabled'] = false
 default['sumologic']['log_sources']['default_category'] = 'log'
 default['sumologic']['api_timeout'] = 60
 default['sumologic']['custom_install'] = false
+
+#databag location for credentials
+default['sumologic']['credentials']['bag_name'] = 'sumo-creds'
+default['sumologic']['credentials']['item_name'] = 'api-creds'
+
