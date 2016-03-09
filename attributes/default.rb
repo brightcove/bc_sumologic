@@ -4,7 +4,7 @@
 # Cookbook Name:: sumologic
 # Attributes:: default
 #
-# Copyright 2013, PagerDuty, Inc.
+# Copyright 2015, PagerDuty, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,5 +21,7 @@
 
 # default sumocollector attributes
 # Set to true to disable the collector on this node
-default[:sumologic][:disabled] = false
-default['sumologic']['sources']['default_category'] = 'log'
+default['sumologic']['disabled'] = false
+default['sumologic']['log_sources']['default_category'] = 'log'
+default['sumologic']['api_timeout'] = 60
+default['sumologic']['custom_install'] = false
