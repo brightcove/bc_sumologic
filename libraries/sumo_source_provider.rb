@@ -21,13 +21,30 @@ class Chef
           name: node.name,
           api_username: databag_creds['userID'] || node['sumologic']['userID'],
           api_password: databag_creds['password'] || node['sumologic']['password'],
-          api_timeout: node['sumologic']['api_timeout']
+          api_timeout: node['sumologic']['api_timeout'],
+          query_limit: node['sumologic']['collector_query_limit']
         )
 
         # Does out collector exist?
         if not @@collector.exist?
           # No, bug out.
-          raise Chef::Exceptions::ValidationFailed,"A SumoLogic Collector named: `#{node.name}` does not exist.\n\nTo resolve this isssue:\n\n\t1. Stop the SumoCollector process:\n\t\t`sudo /opt/SumoCollector/collector stop`\n\n\t2. Remove the SumoCollector directory.\n\t\t`sudo rm -r /opt/SumoCollector`\n\n\t3. Rerun chef-client.\n\t\t`sudo chef-client`"
+          raise Chef::Exceptions::ValidationFailed,
+            "SumoLogic Collector missing from: `https://api.sumologic.com/api/v1/collectors/`"\
+            "\nEither a SumoLogic Collector named: `#{node.name}` does not exist, or was not returned in collector list\n"\
+            "within the limit of `#{node['sumologic']['collector_query_limit']}` collectors.\n"\
+            "\nLog into the SumoLogic WebUI and verify the collector exists.\n"\
+            "\nIf the collector does exist:"\
+            "\n\n\tPlease increase the value of:"\
+            "\n\n\t\t`default['sumologic']['collector_query_limit']`"\
+            "\n\t\t\tOR"\
+            "\n\t\t`node['sumologic']['collector_query_limit']`"\
+            "\n\nIf the collector does not exist:"\
+            "\n\n\t1. Stop the SumoCollector process:"\
+            "\n\t\t`sudo /opt/SumoCollector/collector stop`"\
+            "\n\n\t2. Remove the SumoCollector directory."\
+            "\n\t\t`sudo rm -r /opt/SumoCollector`"\
+            "\n\n\t3. Rerun chef-client."\
+            "\n\t\t`sudo chef-client`\n\n"
         end
 
         # Is our collector in Json/Local Config mode?

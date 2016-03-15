@@ -1,27 +1,32 @@
 require 'net/https'
 require 'json'
 
+
 class Sumologic
   class ApiError < RuntimeError; end
 
-  def self.collector_exists?(node_name, email, pass, api_timeout = nil)
+  include Chef::Mixin
+
+  def self.collector_exists?(node_name, email, pass, api_timeout = nil, query_limit = nil)
     collector = Sumologic::Collector.new(
       name: node_name,
       api_username: email,
       api_password: pass,
-      api_timeout: api_timeout
+      api_timeout: api_timeout,
+      query_limit: query_limit
     )
     collector.exist?
   end
 
   class Collector
-    attr_reader :name, :api_username, :api_password, :api_timeout
+    attr_reader :name, :api_username, :api_password, :api_timeout, :query_limit
 
     def initialize(opts = {})
       @name = opts[:name]
       @api_username = opts[:api_username]
       @api_password = opts[:api_password]
       @api_timeout = opts[:api_timeout] || 60
+      @query_limit = opts[:query_limit] || 1000
     end
 
     def api_endpoint
@@ -70,7 +75,7 @@ class Sumologic
     end
 
     def list_collectors
-      uri = URI.parse(api_endpoint + '/collectors')
+      uri = URI.parse(api_endpoint + '/collectors?limit=' + query_limit)
       request = Net::HTTP::Get.new(uri.request_uri)
       api_request(uri: uri, request: request)
     end

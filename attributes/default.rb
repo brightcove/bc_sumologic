@@ -26,7 +26,10 @@ default['sumologic']['log_sources']['default_category'] = 'log'
 default['sumologic']['api_timeout'] = 60
 default['sumologic']['custom_install'] = false
 
-#databag location for credentials
+# databag location for credentials
 default['sumologic']['credentials']['bag_name'] = 'sumo-creds'
 default['sumologic']['credentials']['item_name'] = 'api-creds'
 
+# Limit the number of collectors queried, default is 1000.
+# We are at 1121 Collectors.
+default['sumologic']['collector_query_limit'] = '1000'
