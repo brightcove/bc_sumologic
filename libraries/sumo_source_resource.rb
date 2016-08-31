@@ -2,7 +2,9 @@ class Chef
   class Resource
     class SumoSource < Chef::Resource
       identity_attr :path
-      state_attrs :category, :default_timezone, :force_timezone
+      state_attrs :category, :default_timezone, :force_timezone,
+                  :multiline_processing_enabled, :use_autoline_matching,
+                  :automatic_date_parsing, :manual_prefix_regexp, :default_date_format
       provider_base Chef::Provider::SumoSource
 
       def initialize(name, run_context = nil)
@@ -58,10 +60,30 @@ class Chef
       end
 
       def use_autoline_matching(arg = nil)
+        # If autoline matching has been specificed as true... and multiline processing is disabled.
+        if !arg.nil? and arg == true and !multiline_processing_enabled
+          Chef::Log.warn("Forcing multiline processing to on because autoline matching was enabled.")
+          multiline_processing_enabled(true)
+        end
+
         set_or_return(:use_autoline_matching, arg, kind_of: [TrueClass, FalseClass])
       end
 
       def manual_prefix_regexp(arg = nil)
+
+        # If a regexp has been specificed... and multiline processing is disabled.
+        if !arg.nil? and !multiline_processing_enabled
+          Chef::Log.warn("Forcing multiline processing to on because a regexp was specified.")
+          multiline_processing_enabled(true)
+        end
+
+        # If a regexp has been specified... and autoline matching is enabled.
+        if !arg.nil? and use_autoline_matching
+          Chef::Log.warn("Forcing autoline matching to off because a regexp was specified.")
+          # For autoline matching to off
+          use_autoline_matching(false)
+        end
+
         set_or_return(:manual_prefix_regexp, arg, kind_of: String)
       end
 

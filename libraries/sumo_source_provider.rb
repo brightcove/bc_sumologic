@@ -132,7 +132,7 @@ class Chef
         Chef::Resource::SumoSource.state_attrs.each do |attr|
           current_value = @current_resource.send(attr)
           new_value = @new_resource.send(attr)
-          if current_resource != new_value
+          if current_value != new_value
             description << "value of #{attr} will change from '#{current_value}' to '#{new_value}'\n"
           end
         end
