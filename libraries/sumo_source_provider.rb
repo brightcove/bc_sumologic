@@ -19,8 +19,8 @@ class Chef
         databag_creds = Chef::EncryptedDataBagItem.load(node[:sumologic][:credentials][:bag_name], node[:sumologic][:credentials][:item_name], databag_secret)
         @@collector ||= Sumologic::Collector.new(
           name: node.name,
-          api_username: databag_creds['userID'] || node['sumologic']['userID'],
-          api_password: databag_creds['password'] || node['sumologic']['password'],
+          api_username: databag_creds['accessID'] || node['sumologic']['userID'],
+          api_password: databag_creds['accessKey'] || node['sumologic']['password'],
           api_timeout: node['sumologic']['api_timeout'],
           query_limit: node['sumologic']['collector_query_limit']
         )
